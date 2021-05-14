@@ -387,8 +387,8 @@ var doHighlighting = function () {
         j = parseInt($(this).attr("src-col"));
     });
 
-    $(".puzzle-field.black").each(function(index) {
-        if($(this).children("span").text() != "#") {
+    $(".puzzle-field.black").each(function (index) {
+        if ($(this).children("span").text() != "#") {
             $(this).removeClass("black");
         }
     });
@@ -520,10 +520,21 @@ var openBuchstabenCom = function () {
 
 // export board to base64 into user clipboard
 var exportBoard = function () {
-    $("#copy").text(btoa(JSON.stringify({ 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() })));
 
     // select this to clipboard
-    // @todo
+    var target = document.createElement("textarea");
+    target.style.position = "absolute";
+    target.style.left = "-9999px";
+    target.style.top = "0";
+    target.id = "_hiddenCopyText_";
+    document.body.appendChild(target);
+    target.textContent = btoa(JSON.stringify({ 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() }));
+    target.focus();
+    target.setSelectionRange(0, target.value.length);
+    succeed = document.execCommand("copy");
+    target.textContent = ""; // clear content
+    alert("Copied to Clipboard!");
+    focusSelected();
 }
 
 // prompt user for base64 string and import.
