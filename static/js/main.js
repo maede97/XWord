@@ -308,7 +308,6 @@ var parseNumbers = function (numbers) {
     for (let i = 1; i < puzzleSize + 1; i++) {
         for (let j = 1; j < puzzleSize + 1; j++) {
             if ($("#" + i + "-" + j).attr("src-number") !== "number-0") {
-                console.log($("#" + i + "-" + j).attr("src-number"))
                 $("#" + i + "-" + j).removeClass($("#" + i + "-" + j).attr("src-number"));
             }
             $("#" + i + "-" + j).addClass("number-" + numbers[index]);
@@ -387,6 +386,13 @@ var doHighlighting = function () {
         i = parseInt($(this).attr("src-row"));
         j = parseInt($(this).attr("src-col"));
     });
+
+    $(".puzzle-field.black").each(function(index) {
+        if($(this).children("span").text() != "#") {
+            $(this).removeClass("black");
+        }
+    });
+
     // now move in both directions until black or wall
     if (direction === 0) {
         // change j
@@ -523,8 +529,9 @@ var importBoard = function () {
         parseBoardString(dict["board"]);
         parseNumbers(dict["numbers"]);
         parseCircles(dict["circles"]);
-        console.log(dict["numbers"]);
         sendBoard(); // send imported board back to server.
+        doHighlighting();
+        doButtonActives();
     }
 }
 
