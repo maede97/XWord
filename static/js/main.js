@@ -31,10 +31,44 @@ var getID = function (i, j) {
     return i + "-" + j;
 }
 
+var doButtonActives = function() {
+    let i = 0;
+    let j = 0;
+    $(".puzzle-field.selected").each(function (index) {
+        i = parseInt($(this).attr("src-row"));
+        j = parseInt($(this).attr("src-col"));
+    });
+
+    let selector = "#" + getID(i, j);
+    if($(selector).hasClass("black")) {
+        $("#fillblack").attr("disabled", true);
+        $("#removeblack").attr("disabled", false);
+    } else {
+        $("#fillblack").attr("disabled", false);
+        $("#removeblack").attr("disabled", true);
+    }
+
+    if($(selector).attr("src-number") == "number-0") {
+        $("#removenumber").attr("disabled", true);
+    } else {
+        $("#removenumber").attr("disabled", false);
+    }
+
+    if($(selector).hasClass("solution-circle")) {
+        $("#addcircle").attr("disabled", true);
+        $("#removecircle").attr("disabled", false);
+    } else {
+        $("#addcircle").attr("disabled", false);
+        $("#removecircle").attr("disabled", true);
+    }
+}
+
 var deleteAllFocusAddThis = function (e) {
     $(".puzzle-field.selected").each(function (index) { $(this).removeClass("selected"); });
     $(e).addClass("selected");
     doHighlighting();
+
+    doButtonActives();
 }
 
 var getDivString = function (i, j) {
@@ -79,6 +113,7 @@ var keyPressFunc = function (event) {
         }
 
         sendBoard();
+        doButtonActives();
 
         event.preventDefault();
         return;
@@ -161,6 +196,7 @@ var fillBlack = function () {
         sendBoard();
     });
     doHighlighting();
+    doButtonActives();
 }
 
 var removeBlack = function () {
@@ -170,6 +206,7 @@ var removeBlack = function () {
         sendBoard();
     });
     doHighlighting();
+    doButtonActives();
 }
 
 socket.on('puzzlesize', function (data) {
@@ -375,6 +412,8 @@ var addSolutionCircle = function () {
         $(this).attr("src-circle", 1);
     });
     sendBoard();
+    doButtonActives();
+    focusSelected();
 }
 var removeSolutionCircle = function () {
     $(".puzzle-field.selected").each(function (index) {
@@ -382,6 +421,8 @@ var removeSolutionCircle = function () {
         $(this).attr("src-circle", 0);
     });
     sendBoard();
+    doButtonActives();
+    focusSelected();
 }
 
 var printDialog = function (showChars) {

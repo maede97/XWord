@@ -11,6 +11,10 @@ div.puzzle-field {
     font-size: 200%;
 }
 
+div#print {
+    margin-top: 10px;
+}
+
 div.board {
     display: grid;
     grid-gap: 0px;
@@ -45,4 +49,8 @@ div.hide-char.black {
 div.puzzle-field.solution-circle {
     border: 1px solid blue;
     border-radius: 50%;
+}
+
+div.puzzle-field.number-0::after {
+    display:none;
 }
