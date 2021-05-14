@@ -85,7 +85,7 @@ var getDivString = function (i, j) {
     return "<div class='puzzle-field col-md-auto justify-content-md-center grid-item' id='" +
         getID(i, j) + "'\
         contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' style='grid-column:"
-        + j + "; grid-row:" + i + "' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
+        + j + "; grid-row:" + i + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
 }
 
 // set focus on the selected elements
@@ -109,7 +109,7 @@ var keyPressFunc = function (event) {
     if (key.match(/[0-9]/)) {
         // add small number to cell
         var attr = $("#" + getID(i, j)).attr("src-number");
-        if (attr) {
+        if (attr != "number-0") {
             var length = attr.length;
             if (length > 0) {
                 let number = attr.split("-")[1];
@@ -120,6 +120,7 @@ var keyPressFunc = function (event) {
             }
         } else {
             let number = key;
+            $(event.currentTarget).removeClass("number-0");
             $(event.currentTarget).addClass("number-" + number);
             $(event.currentTarget).attr("src-number", "number-" + number);
         }
@@ -267,10 +268,10 @@ var createBoardString = function () {
 
 // create number string based on the board
 var createNumberString = function () {
-    let result = "";
+    let result = [];
     for (let i = 1; i < puzzleSize + 1; i++) {
         for (let j = 1; j < puzzleSize + 1; j++) {
-            result += $("#" + i + "-" + j).attr("src-number") + ",";
+            result.push(parseInt($("#" + i + "-" + j).attr("src-number").split("-")[1]));
         }
     }
     return result;
@@ -278,10 +279,10 @@ var createNumberString = function () {
 
 // create circle string based on the board
 var createCircleString = function () {
-    let result = "";
+    let result = [];
     for (let i = 1; i < puzzleSize + 1; i++) {
         for (let j = 1; j < puzzleSize + 1; j++) {
-            result += $("#" + i + "-" + j).attr("src-circle") + ",";
+            result.push(parseInt($("#" + i + "-" + j).attr("src-circle")));
         }
     }
     return result;
@@ -306,6 +307,10 @@ var parseNumbers = function (numbers) {
     let index = 0;
     for (let i = 1; i < puzzleSize + 1; i++) {
         for (let j = 1; j < puzzleSize + 1; j++) {
+            if ($("#" + i + "-" + j).attr("src-number") !== "number-0") {
+                console.log($("#" + i + "-" + j).attr("src-number"))
+                $("#" + i + "-" + j).removeClass($("#" + i + "-" + j).attr("src-number"));
+            }
             $("#" + i + "-" + j).addClass("number-" + numbers[index]);
             $("#" + i + "-" + j).attr("src-number", "number-" + numbers[index]);
             index++;
@@ -505,6 +510,22 @@ var openBuchstabenCom = function () {
     });
     window.open("https://buchstaben.com/amp/woerter-suchen?pattern=" + search);
     focusSelected();
+}
+
+var exportBoard = function () {
+    console.log(btoa(JSON.stringify({ 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() })));
+}
+
+var importBoard = function () {
+    var importText = prompt("Import Board:");
+    if (importText !== null) {
+        let dict = JSON.parse(atob(importText));
+        parseBoardString(dict["board"]);
+        parseNumbers(dict["numbers"]);
+        parseCircles(dict["circles"]);
+        console.log(dict["numbers"]);
+        sendBoard(); // send imported board back to server.
+    }
 }
 
 // handle server sending board

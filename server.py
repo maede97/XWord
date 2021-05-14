@@ -13,22 +13,6 @@ board = " " * puzzle_size * puzzle_size
 numbers = [0] * puzzle_size * puzzle_size
 circles = [0] * puzzle_size * puzzle_size
 
-def parseNumbers(numbersString):
-    arr = numbersString.split(",")
-    result = []
-    for i in arr[:-1]:
-        num = int(i.split("-")[1])
-        result.append(num)
-    return result
-
-def parseCircles(circlesString):
-    arr = circlesString.split(",")
-    result = []
-    for i in arr[:-1]:
-        num = int(i)
-        result.append(num)
-    return result
-
 # Routes
 @app.route('/')
 def index():
@@ -66,8 +50,8 @@ def updateBoard(data):
     global numbers
     global circles
     board = data["board"]
-    numbers = parseNumbers(data["numbers"])
-    circles = parseCircles(data["circles"])
+    numbers = data["numbers"]
+    circles = data["circles"]
     emit("board", {"board": board, "numbers": numbers, "circles": circles}, broadcast=True)
 
 @socketio.on("server-load")

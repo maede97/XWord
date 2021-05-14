@@ -17,8 +17,8 @@
         <p>Online Users: <span id="online-users">0</span></p>
 
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-8">
                 <button type="button" id="fillblack" disabled class="btn btn-dark" onclick="fillBlack()">Fill Black</button>
                 <button type="button" id="removeblack" disabled class="btn btn-light btn-outline-dark" onclick="removeBlack()">Remove Black</button>
                 <button type="button" id="addcircle" disabled class="btn btn-primary" onclick="addSolutionCircle()">Add Circle</button>
@@ -29,7 +29,10 @@
                     <div class="board" id="board"></div>
                 </div>
             </div>
-            <div class="col-2">
+            <div class="col-xl-2">
+                <button type="button" class="btn btn-info" onclick="exportBoard()">Export Board</button>
+                <button type="button" class="btn btn-info" onclick="importBoard()">Import Board</button>
+
                 <button type="button" class="btn btn-primary" onclick="printDialog(true)">Render Solution</button>
                 <button type="button" class="btn btn-primary" onclick="printDialog(false)">Render Empty</button>
                 <br />

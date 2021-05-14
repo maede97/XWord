@@ -54,3 +54,7 @@ div.puzzle-field.solution-circle {
 div.puzzle-field.number-0::after {
     display:none;
 }
+
+button.btn-outline-dark:disabled {
+    border-color: #212529;
+}
