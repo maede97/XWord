@@ -140,13 +140,13 @@ var keyPressFunc = function (event) {
         sendBoard();
         if (direction == 0) {
             // horizontal, keep i
-            if (j == puzzleSize) {
+            if (j == puzzleSize || $("#" + getID(i, (j+1))).hasClass("black")) {
                 return;
             } else {
                 $("#" + getID(i, (j + 1))).focus();
             }
         } else {
-            if (i == puzzleSize) {
+            if (i == puzzleSize || $("#" + getID(i, (j+1))).hasClass("black")) {
                 return;
             } else {
                 $("#" + getID((i + 1), j)).focus();
