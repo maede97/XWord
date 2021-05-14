@@ -1,5 +1,6 @@
 var socket = io();
 
+// Global variables
 var puzzleSize;
 var direction = 0; // left to rigth, 1 for top-down
 
@@ -19,28 +20,35 @@ socket.on('get-online-people', function (data) {
     $("#online-users").text(data["online-users"])
 });
 
+// Tell server to store to disk
 var serverStore = function () {
     socket.emit('server-store');
 }
 
+// Tell server to load from disk
 var serverLoad = function () {
     socket.emit('server-load');
 }
 
+// Get ID based on row and column
 var getID = function (i, j) {
     return i + "-" + j;
 }
 
-var doButtonActives = function() {
+// Enable / Disable all buttons based on their actions.
+var doButtonActives = function () {
     let i = 0;
     let j = 0;
+    $("#buchstabenCom").attr("disabled", true);
     $(".puzzle-field.selected").each(function (index) {
         i = parseInt($(this).attr("src-row"));
         j = parseInt($(this).attr("src-col"));
+
+        $("#buchstabenCom").attr("disabled", false);
     });
 
     let selector = "#" + getID(i, j);
-    if($(selector).hasClass("black")) {
+    if ($(selector).hasClass("black")) {
         $("#fillblack").attr("disabled", true);
         $("#removeblack").attr("disabled", false);
     } else {
@@ -48,13 +56,13 @@ var doButtonActives = function() {
         $("#removeblack").attr("disabled", true);
     }
 
-    if($(selector).attr("src-number") == "number-0") {
+    if ($(selector).attr("src-number") == "number-0") {
         $("#removenumber").attr("disabled", true);
     } else {
         $("#removenumber").attr("disabled", false);
     }
 
-    if($(selector).hasClass("solution-circle")) {
+    if ($(selector).hasClass("solution-circle")) {
         $("#addcircle").attr("disabled", true);
         $("#removecircle").attr("disabled", false);
     } else {
@@ -63,6 +71,7 @@ var doButtonActives = function() {
     }
 }
 
+// Unselect all, but give focus to element given.
 var deleteAllFocusAddThis = function (e) {
     $(".puzzle-field.selected").each(function (index) { $(this).removeClass("selected"); });
     $(e).addClass("selected");
@@ -71,6 +80,7 @@ var deleteAllFocusAddThis = function (e) {
     doButtonActives();
 }
 
+// Create a string with all puzzle pieces
 var getDivString = function (i, j) {
     return "<div class='puzzle-field col-md-auto justify-content-md-center grid-item' id='" +
         getID(i, j) + "'\
@@ -78,12 +88,14 @@ var getDivString = function (i, j) {
         + j + "; grid-row:" + i + "' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
 }
 
+// set focus on the selected elements
 var focusSelected = function () {
     $(".puzzle-field.selected").each(function (index) {
         $(this).focus();
     });
 }
 
+// handle on key press functionality.
 var keyPressFunc = function (event) {
     var keyCode = event.keyCode || event.which;
     if (keyCode >= 96 && keyCode <= 105) {
@@ -175,11 +187,13 @@ var keyPressFunc = function (event) {
     }
 }
 
+// Create a string with custom JS, which registers key presses and mouse clicks
 var getClickString = function (i, j) {
     return "$('#" + getID(i, j) + "').mousedown(function(){clickFunction('" + getID(i, j) +
         "');});$('#" + getID(i, j) + "').on('keydown',keyPressFunc);";
 }
 
+// Handle mouse click
 var clickFunction = function (id) {
     // if click on selected, flip direction
     if ($("#" + id).hasClass("selected")) {
@@ -188,6 +202,7 @@ var clickFunction = function (id) {
     }
 }
 
+// Fill a cell black
 var fillBlack = function () {
     // search all selected pieces
     $(".puzzle-field.selected").each(function (index) {
@@ -199,6 +214,7 @@ var fillBlack = function () {
     doButtonActives();
 }
 
+// Remove black from a cell
 var removeBlack = function () {
     $(".puzzle-field.selected").each(function (index) {
         $(this).children(".char").text(" ");
@@ -209,6 +225,7 @@ var removeBlack = function () {
     doButtonActives();
 }
 
+// handle server sending puzzle size
 socket.on('puzzlesize', function (data) {
     puzzleSize = parseInt(data["size"]);
 
@@ -232,10 +249,12 @@ var getNumUsers = function () {
     socket.emit('get-online-people');
 }
 
+// send server command to send the board
 var getBoard = function () {
     socket.emit('board');
 }
 
+// create a string based on the board
 var createBoardString = function () {
     let result = "";
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -246,6 +265,7 @@ var createBoardString = function () {
     return result;
 }
 
+// create number string based on the board
 var createNumberString = function () {
     let result = "";
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -256,6 +276,7 @@ var createNumberString = function () {
     return result;
 }
 
+// create circle string based on the board
 var createCircleString = function () {
     let result = "";
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -266,6 +287,7 @@ var createCircleString = function () {
     return result;
 }
 
+// parse the string given and set classes respectively
 var parseBoardString = function (boardString) {
     let index = 0;
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -279,6 +301,7 @@ var parseBoardString = function (boardString) {
     }
 }
 
+// parse all numbers and add them to this board
 var parseNumbers = function (numbers) {
     let index = 0;
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -290,6 +313,7 @@ var parseNumbers = function (numbers) {
     }
 }
 
+// remove numbers from a cell
 var removeNumber = function () {
     $(".puzzle-field.selected").each(function (index) {
         if ($(this).attr("src-number")) {
@@ -303,10 +327,12 @@ var removeNumber = function () {
     });
 }
 
+// send board to the server (after update)
 var sendBoard = function () {
     socket.emit('update-board', { 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() });
 };
 
+// create custom css for each number element
 var createNumberCSS = function () {
     for (let i = 0; i < puzzleSize; i++) {
         let css = "<style type='text/css'>";
@@ -327,6 +353,7 @@ var createNumberCSS = function () {
     }
 }
 
+// parse circles from a given string
 var parseCircles = function (circles) {
     let index = 0;
     for (let i = 1; i < puzzleSize + 1; i++) {
@@ -343,6 +370,7 @@ var parseCircles = function (circles) {
     }
 }
 
+// highlight cells based on their row/column (if one selected in this row/column)
 var doHighlighting = function () {
     let i = 0;
     let j = 0;
@@ -406,6 +434,7 @@ var doHighlighting = function () {
     }
 }
 
+// add a circle to the board
 var addSolutionCircle = function () {
     $(".puzzle-field.selected").each(function (index) {
         $(this).addClass("solution-circle");
@@ -415,6 +444,8 @@ var addSolutionCircle = function () {
     doButtonActives();
     focusSelected();
 }
+
+// remove a circle from the board
 var removeSolutionCircle = function () {
     $(".puzzle-field.selected").each(function (index) {
         $(this).removeClass("solution-circle");
@@ -425,6 +456,7 @@ var removeSolutionCircle = function () {
     focusSelected();
 }
 
+// open print dialog on new page
 var printDialog = function (showChars) {
     // Remove all highlighting
     $(".puzzle-field.highlight").each(function (index) {
@@ -448,10 +480,7 @@ var printDialog = function (showChars) {
     html += '<html lang="en-us">';
     html += headers;
     html += "<body>";
-
-    //check to see if they are null so "undefined" doesnt print on the page. <br>s optional, just to give space
-    if (field != null) html += field + "<br/><br/>";
-
+    html += field;
     html += "</body>";
     w.document.write(html);
     w.window.print();
@@ -462,13 +491,30 @@ var printDialog = function (showChars) {
     }
 }
 
+// open buchstaben.com with the given word as a search (with empty cells)
+var openBuchstabenCom = function () {
+    var search = "";
+    $(".puzzle-field.highlight").each(function (index) {
+        let char = $(this).children("span").text();
+        if (char == " ") {
+            // add _
+            search += "_";
+        } else {
+            search += char;
+        }
+    });
+    window.open("https://buchstaben.com/amp/woerter-suchen?pattern=" + search);
+    focusSelected();
+}
+
+// handle server sending board
 socket.on('board', function (data) {
     parseBoardString(data["board"]);
     parseNumbers(data["numbers"]);
     parseCircles(data["circles"]);
 });
 
-// Send question for num users
+// Send question for num users and board
 $(document).ready(function () {
     getNumUsers();
     getBoard();
