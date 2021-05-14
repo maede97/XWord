@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head id="headers">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="static/css/main.css" rel="stylesheet">
+    <title>XWord</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>XWordCreater</h1>
+        <p>Online Users: <span id="online-users">0</span></p>
+
+        <div class="row">
+            <div class="col-8" id="print">
+                <div class="board" id="board"></div>
+            </div>
+            <div class="col-4">
+                <button type="button" class="btn btn-dark" onclick="fillBlack()">Fill Black</button>
+                <button type="button" class="btn btn-light" onclick="removeBlack()">Remove Black</button>
+                <br />
+                <button type="button" class="btn btn-primary" onclick="direction=0;focusSelected()">Edit
+                    Horizontal</button>
+                <button type="button" class="btn btn-primary" onclick="direction=1;focusSelected()">Edit
+                    Vertical</button>
+                <br />
+                <button type="button" class="btn btn-primary" onclick="addSolutionCircle()">Add Circle</button>
+                <button type="button" class="btn btn-primary" onclick="removeSolutionCircle()">Remove Circle</button>
+                <br />
+                <button type="button" class="btn btn-primary" onclick="removeNumber()">Remove Number</button>
+                <br />
+                <button type="button" class="btn btn-primary" onclick="printDialog(true)">Render Solution</button>
+                <button type="button" class="btn btn-primary" onclick="printDialog(false)">Render Empty</button>
+                <br />
+                <button type="button" class="btn btn-primary" onclick="serverStore()">Server store puzzle</button>
+                <button type="button" class="btn btn-primary" onclick="serverLoad()">Server load puzzle</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+        crossorigin="anonymous"></script>
+    <script src="static/js/main.js"></script>
+    <script id="key-checker"></script>
+
+</html>
