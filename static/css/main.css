@@ -58,3 +58,15 @@ div.puzzle-field.number-0::after {
 button.btn-outline-dark:disabled {
     border-color: #212529;
 }
+
+div.puzzle-field.black.selected {
+    background-color: rgba(46, 67, 85, 0.616);
+    color: rgba(46,67,85,0.0);
+}
+
+div.copy {
+    margin-top: 10px;
+    height: 100px;
+    line-break: anywhere;
+    overflow-y: hidden;
+}

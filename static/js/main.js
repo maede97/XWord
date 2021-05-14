@@ -518,10 +518,15 @@ var openBuchstabenCom = function () {
     focusSelected();
 }
 
+// export board to base64 into user clipboard
 var exportBoard = function () {
-    console.log(btoa(JSON.stringify({ 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() })));
+    $("#copy").text(btoa(JSON.stringify({ 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() })));
+
+    // select this to clipboard
+    // @todo
 }
 
+// prompt user for base64 string and import.
 var importBoard = function () {
     var importText = prompt("Import Board:");
     if (importText !== null) {
