@@ -34,6 +34,7 @@ var getID = function (i, j) {
 var deleteAllFocusAddThis = function (e) {
     $(".puzzle-field.selected").each(function (index) { $(this).removeClass("selected"); });
     $(e).addClass("selected");
+    doHighlighting();
 }
 
 var getDivString = function (i, j) {
@@ -150,6 +151,7 @@ var fillBlack = function () {
         $(this).addClass("black");
         sendBoard();
     });
+    doHighlighting();
 }
 
 var removeBlack = function () {
@@ -158,6 +160,7 @@ var removeBlack = function () {
         $(this).removeClass("black");
         sendBoard();
     });
+    doHighlighting();
 }
 
 socket.on('puzzlesize', function (data) {
@@ -294,6 +297,69 @@ var parseCircles = function (circles) {
     }
 }
 
+var doHighlighting = function () {
+    let i = 0;
+    let j = 0;
+    $(".puzzle-field.highlight").each(function (index) {
+        $(this).removeClass("highlight");
+    });
+
+    $(".puzzle-field.selected").each(function (index) {
+        i = parseInt($(this).attr("src-row"));
+        j = parseInt($(this).attr("src-col"));
+    });
+    // now move in both directions until black or wall
+    if (direction === 0) {
+        // change j
+        let step_j = j;
+        while (true) {
+            if (step_j < 1) break; // wall
+            if ($("#" + getID(i, step_j)).children("span").text() == "#") {
+                // black
+                break;
+            }
+
+            $("#" + getID(i, step_j)).addClass("highlight");
+            step_j--;
+        }
+        step_j = j;
+        while (true) {
+            if (step_j == puzzleSize+1) break; // wall
+            if ($("#" + getID(i, step_j)).children("span").text() == "#") {
+                // black
+                break;
+            }
+
+            $("#" + getID(i, step_j)).addClass("highlight");
+            step_j++;
+        }
+    } else {
+        // change i
+        let step_i = i;
+        while (true) {
+            if (step_i < 1) break; // wall
+            if ($("#" + getID(step_i, j)).children("span").text() == "#") {
+                // black
+                break;
+            }
+
+            $("#" + getID(step_i, j)).addClass("highlight");
+            step_i--;
+        }
+        step_i = i;
+        while (true) {
+            if (step_i == puzzleSize+1) break; // wall
+            if ($("#" + getID(step_i, j)).children("span").text() == "#") {
+                // black
+                break;
+            }
+
+            $("#" + getID(step_i, j)).addClass("highlight");
+            step_i++;
+        }
+    }
+}
+
 var addSolutionCircle = function () {
     $(".puzzle-field.selected").each(function (index) {
         $(this).addClass("solution-circle");
@@ -310,6 +376,15 @@ var removeSolutionCircle = function () {
 }
 
 var printDialog = function (showChars) {
+    // Remove all highlighting
+    $(".puzzle-field.highlight").each(function (index) {
+        $(this).removeClass("highlight");
+    });
+    // remove selected
+    $(".puzzle-field.selected").each(function (index) {
+        $(this).removeClass("selected");
+    });
+
     if (!showChars) {
         $("div.puzzle-field").each(function (index) { $(this).addClass("hide-char") });
     }

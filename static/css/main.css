@@ -19,6 +19,10 @@ div.board {
     margin-right: -24px;
 }
 
+div.highlight {
+    background-color: rgba(201, 204, 12, 0.582);
+}
+
 div.selected {
     background-color: rgba(83, 133, 177, 0.616);
 }
