@@ -70,3 +70,12 @@ div.copy {
     line-break: anywhere;
     overflow-y: hidden;
 }
+
+@media print {
+    div.puzzle-field:not(.hide-char)::after {
+        display: none;
+    }
+    div.puzzle-field.solution-circle:not(.hide-char) {
+        border: 0px;
+    }
+}
