@@ -310,6 +310,9 @@ var parseNumbers = function (numbers) {
             if ($("#" + i + "-" + j).attr("src-number") !== "number-0") {
                 $("#" + i + "-" + j).removeClass($("#" + i + "-" + j).attr("src-number"));
             }
+            if($("#" + i + "-" + j).hasClass("number-0")) {
+                $("#" + i + "-" + j).removeClass("number-0");
+            }
             $("#" + i + "-" + j).addClass("number-" + numbers[index]);
             $("#" + i + "-" + j).attr("src-number", "number-" + numbers[index]);
             index++;
