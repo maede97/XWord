@@ -40,7 +40,7 @@ var deleteAllFocusAddThis = function (e) {
 var getDivString = function (i, j) {
     return "<div class='puzzle-field col-md-auto justify-content-md-center grid-item' id='" +
         getID(i, j) + "'\
-        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circl='0' tabindex='" + (i * puzzleSize + j) + "' style='grid-column:"
+        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' style='grid-column:"
         + j + "; grid-row:" + i + "' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
 }
 
@@ -83,7 +83,7 @@ var keyPressFunc = function (event) {
         event.preventDefault();
         return;
     }
-    if (key.match(/[a-zA-Z#\s]/)) {
+    if (key.match(/[A-Z\s]/)) {
         $(event.currentTarget).children(".char").text(key.toUpperCase());
 
         event.preventDefault();
@@ -141,7 +141,16 @@ var keyPressFunc = function (event) {
 }
 
 var getClickString = function (i, j) {
-    return "$('#" + getID(i, j) + "').on('keydown',keyPressFunc);";
+    return "$('#" + getID(i, j) + "').mousedown(function(){clickFunction('" + getID(i, j) +
+        "');});$('#" + getID(i, j) + "').on('keydown',keyPressFunc);";
+}
+
+var clickFunction = function (id) {
+    // if click on selected, flip direction
+    if ($("#" + id).hasClass("selected")) {
+        direction = (1 - direction);
+        doHighlighting();
+    }
 }
 
 var fillBlack = function () {
@@ -324,7 +333,7 @@ var doHighlighting = function () {
         }
         step_j = j;
         while (true) {
-            if (step_j == puzzleSize+1) break; // wall
+            if (step_j == puzzleSize + 1) break; // wall
             if ($("#" + getID(i, step_j)).children("span").text() == "#") {
                 // black
                 break;
@@ -348,7 +357,7 @@ var doHighlighting = function () {
         }
         step_i = i;
         while (true) {
-            if (step_i == puzzleSize+1) break; // wall
+            if (step_i == puzzleSize + 1) break; // wall
             if ($("#" + getID(step_i, j)).children("span").text() == "#") {
                 // black
                 break;
