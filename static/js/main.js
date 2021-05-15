@@ -44,7 +44,11 @@ var doButtonActives = function () {
         i = parseInt($(this).attr("src-row"));
         j = parseInt($(this).attr("src-col"));
 
-        $("#buchstabenCom").attr("disabled", false);
+        if ($("#" + getID(i, j)).hasClass("black")) {
+            $("#buchstabenCom").attr("disabled", true);
+        } else {
+            $("#buchstabenCom").attr("disabled", false);
+        }
     });
 
     let selector = "#" + getID(i, j);
@@ -66,7 +70,11 @@ var doButtonActives = function () {
         $("#addcircle").attr("disabled", true);
         $("#removecircle").attr("disabled", false);
     } else {
-        $("#addcircle").attr("disabled", false);
+        if ($(selector).hasClass("black")) {
+            $("#addcircle").attr("disabled", true);
+        } else {
+            $("#addcircle").attr("disabled", false);
+        }
         $("#removecircle").attr("disabled", true);
     }
 }
@@ -140,13 +148,13 @@ var keyPressFunc = function (event) {
         sendBoard();
         if (direction == 0) {
             // horizontal, keep i
-            if (j == puzzleSize || $("#" + getID(i, (j+1))).hasClass("black")) {
+            if (j == puzzleSize || $("#" + getID(i, (j + 1))).hasClass("black")) {
                 return;
             } else {
                 $("#" + getID(i, (j + 1))).focus();
             }
         } else {
-            if (i == puzzleSize || $("#" + getID(i, (j+1))).hasClass("black")) {
+            if (i == puzzleSize || $("#" + getID(i, (j + 1))).hasClass("black")) {
                 return;
             } else {
                 $("#" + getID((i + 1), j)).focus();
@@ -213,6 +221,7 @@ var fillBlack = function () {
     });
     doHighlighting();
     doButtonActives();
+    focusSelected();
 }
 
 // Remove black from a cell
@@ -224,6 +233,7 @@ var removeBlack = function () {
     });
     doHighlighting();
     doButtonActives();
+    focusSelected();
 }
 
 // handle server sending puzzle size
@@ -310,7 +320,7 @@ var parseNumbers = function (numbers) {
             if ($("#" + i + "-" + j).attr("src-number") !== "number-0") {
                 $("#" + i + "-" + j).removeClass($("#" + i + "-" + j).attr("src-number"));
             }
-            if($("#" + i + "-" + j).hasClass("number-0")) {
+            if ($("#" + i + "-" + j).hasClass("number-0")) {
                 $("#" + i + "-" + j).removeClass("number-0");
             }
             $("#" + i + "-" + j).addClass("number-" + numbers[index]);
@@ -451,6 +461,7 @@ var doHighlighting = function () {
 // add a circle to the board
 var addSolutionCircle = function () {
     $(".puzzle-field.selected").each(function (index) {
+        if ($(this).hasClass("black")) return;
         $(this).addClass("solution-circle");
         $(this).attr("src-circle", 1);
     });
