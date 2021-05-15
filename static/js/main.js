@@ -194,6 +194,21 @@ var keyPressFunc = function (event) {
     }
 }
 
+var recomputeNumbers = function () {
+    let currNumber = 1;
+    for (let i = 1; i < puzzleSize + 1; i++) {
+        for (let j = 1; j < puzzleSize + 1; j++) {
+            if ($("#" + i + "-" + j).attr("src-number") != "number-0") {
+                $("#" + i + "-" + j).removeClass($("#" + i + "-" + j).attr("src-number"));
+
+                $("#" + i + "-" + j).attr("src-number", "number-" + currNumber);
+                $("#" + i + "-" + j).addClass("number-" + currNumber);
+                currNumber++;
+            }
+        }
+    }
+}
+
 // Create a string with custom JS, which registers key presses and mouse clicks
 var getClickString = function (i, j) {
     return "$('#" + getID(i, j) + "').mousedown(function(){clickFunction('" + getID(i, j) +
