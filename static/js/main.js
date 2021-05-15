@@ -88,17 +88,10 @@ var deleteAllFocusAddThis = function (e) {
     doButtonActives();
 }
 
-// Create a string with all puzzle pieces
-var getDivString2 = function (i, j) {
-    return "<div class='puzzle-field col-md-auto justify-content-md-center grid-item' id='" +
-        getID(i, j) + "'\
-        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' style='grid-column:"
-        + j + "; grid-row:" + i + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
-}
 var getDivString = function (i, j) {
     return "<div class='puzzle-field col justify-content-md-center' id='" +
         getID(i, j) + "'\
-        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'></span></div>";
+        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
 }
 
 // set focus on the selected elements
@@ -353,6 +346,7 @@ var removeNumber = function () {
 
 // send board to the server (after update)
 var sendBoard = function () {
+    console.log(createBoardString());
     socket.emit('update-board', { 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() });
 };
 
