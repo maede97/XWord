@@ -1,7 +1,7 @@
 var socket = io();
 
 // Global variables
-var puzzleSize;
+var puzzleSize = 0;
 var direction = 0; // left to rigth, 1 for top-down
 
 // SOCKET IO STUFF
@@ -53,11 +53,11 @@ var doButtonActives = function () {
 
     let selector = "#" + getID(i, j);
     if ($(selector).hasClass("black")) {
-        $("#fillblack").attr("disabled", true);
-        $("#removeblack").attr("disabled", false);
+        $("#blackbutton").attr("disabled", false);
+        $("#blackbutton").attr("onclick", "removeBlack()").text("Remove Black");
     } else {
-        $("#fillblack").attr("disabled", false);
-        $("#removeblack").attr("disabled", true);
+        $("#blackbutton").attr("onclick", "fillBlack()").text("Fill Black");
+        $("#blackbutton").attr("disabled", false);
     }
 
     if ($(selector).attr("src-number") == "number-0") {
@@ -67,15 +67,15 @@ var doButtonActives = function () {
     }
 
     if ($(selector).hasClass("solution-circle")) {
-        $("#addcircle").attr("disabled", true);
-        $("#removecircle").attr("disabled", false);
+        $("#circlebutton").attr("onclick", "removeSolutionCircle()").text("Remove Circle");
+        $("#circlebutton").attr("disabled", false);
     } else {
+        $("#circlebutton").attr("onclick", "addSolutionCircle()").text("Add Circle");
         if ($(selector).hasClass("black")) {
-            $("#addcircle").attr("disabled", true);
+            $("#circlebutton").attr("disabled", true);
         } else {
-            $("#addcircle").attr("disabled", false);
+            $("#circlebutton").attr("disabled", false);
         }
-        $("#removecircle").attr("disabled", true);
     }
 }
 
@@ -89,11 +89,16 @@ var deleteAllFocusAddThis = function (e) {
 }
 
 // Create a string with all puzzle pieces
-var getDivString = function (i, j) {
+var getDivString2 = function (i, j) {
     return "<div class='puzzle-field col-md-auto justify-content-md-center grid-item' id='" +
         getID(i, j) + "'\
         contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' style='grid-column:"
         + j + "; grid-row:" + i + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'> </span></div>";
+}
+var getDivString = function (i, j) {
+    return "<div class='puzzle-field col justify-content-md-center' id='" +
+        getID(i, j) + "'\
+        contenteditable='true' src-row='" + i + "' src-col='" + j + "' src-circle='0' tabindex='" + (i * puzzleSize + j) + "' src-number='number-0' onfocusin='deleteAllFocusAddThis(this)'><span class='char'></span></div>";
 }
 
 // set focus on the selected elements
@@ -243,11 +248,13 @@ socket.on('puzzlesize', function (data) {
     let content = "";
     let onclickJS = "";
     for (let i = 1; i < puzzleSize + 1; i++) {
+        content += "<div class='row'>";
         for (let j = 1; j < puzzleSize + 1; j++) {
             // build new board
             content += getDivString(i, j);
             onclickJS += getClickString(i, j);
         }
+        content += "</div>";
     }
 
     $("#board").html(content); // clear old board
