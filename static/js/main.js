@@ -152,7 +152,7 @@ var keyPressFunc = function (event) {
                 $("#" + getID(i, (j + 1))).focus();
             }
         } else {
-            if (i == puzzleSize || $("#" + getID((i+1), )).hasClass("black")) {
+            if (i == puzzleSize || $("#" + getID((i + 1), j)).hasClass("black")) {
                 return;
             } else {
                 $("#" + getID((i + 1), j)).focus();
