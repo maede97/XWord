@@ -346,7 +346,6 @@ var removeNumber = function () {
 
 // send board to the server (after update)
 var sendBoard = function () {
-    console.log(createBoardString());
     socket.emit('update-board', { 'board': createBoardString(), "numbers": createNumberString(), "circles": createCircleString() });
 };
 
