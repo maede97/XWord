@@ -108,10 +108,40 @@ var keyPressFunc = function (event) {
         // Numpad keys
         keyCode -= 48;
     }
-    let key = String.fromCharCode(keyCode);
+
+    if((keyCode < 65 || keyCode > 122) && !(keyCode == 32 /* space */ || keyCode == 8 /* backspace */ || keyCode == 46 /* delete */ || (keyCode > 36 && keyCode < 41) /* arrows */ )) {
+        event.preventDefault();
+        return;
+    }
 
     let i = parseInt($(event.currentTarget).attr("src-row"));
     let j = parseInt($(event.currentTarget).attr("src-col"));
+    if(keyCode == 8 || keyCode == 46) {
+        // delete current, move one back
+        $(event.currentTarget).children(".char").text(" ");
+
+        event.preventDefault();
+        // move minus one in direction and call focus.
+
+        sendBoard();
+        if (direction == 0) {
+            // horizontal, keep i
+            if (j == 1 || $("#" + getID(i, (j - 1))).hasClass("black")) {
+                return;
+            } else {
+                $("#" + getID(i, (j - 1))).focus();
+            }
+        } else {
+            if (i == 1 || $("#" + getID((i - 1), j)).hasClass("black")) {
+                return;
+            } else {
+                $("#" + getID((i - 1), j)).focus();
+            }
+        }
+        return;
+    }
+
+    let key = String.fromCharCode(keyCode);
     if (key.match(/[0-9]/)) {
         // add small number to cell
         var attr = $("#" + getID(i, j)).attr("src-number");
