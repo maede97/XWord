@@ -109,7 +109,13 @@ var keyPressFunc = function (event) {
         keyCode -= 48;
     }
 
-    if((keyCode < 65 || keyCode > 122) && !(keyCode == 32 /* space */ || keyCode == 8 /* backspace */ || keyCode == 46 /* delete */ || (keyCode > 36 && keyCode < 41) /* arrows */ )) {
+    if((keyCode < 65 || keyCode > 122) && 
+            !(keyCode == 32 /* space */ || 
+            keyCode == 8 /* backspace */ ||
+            keyCode == 46 /* delete */ ||
+            (keyCode > 36 && keyCode < 41) /* arrows */ ) ||
+            (String.fromCharCode(keyCode).match(/0-9/) /* digits */
+        )) {
         event.preventDefault();
         return;
     }
