@@ -113,8 +113,8 @@ var keyPressFunc = function (event) {
             !(keyCode == 32 /* space */ || 
             keyCode == 8 /* backspace */ ||
             keyCode == 46 /* delete */ ||
-            (keyCode > 36 && keyCode < 41) /* arrows */ ) ||
-            (String.fromCharCode(keyCode).match([/0-9/]) /* digits */
+            (keyCode > 36 && keyCode < 41) /* arrows */ ||
+            (keyCode > 47 && keyCode < 58) /* digits */
         )) {
         event.preventDefault();
         return;
